@@ -23,7 +23,7 @@
                           <tr>
                             <td>
                                 <div>{{ $post->title }}</div>
-                                <div>link</div>
+                                <div><a href="/article/{{ $post->id }}">/article/{{ $post->id }}</a></div>
                             </td>
                             <td><a href="/master/{{ $post->id }}/post" class="btn btn-xs btn-primary">修改</a></td>
                           </tr>

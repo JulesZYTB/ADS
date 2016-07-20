@@ -43,10 +43,22 @@ class HomeController extends Controller
         if(is_numeric($id) && $id>0){
             $post = Posts::find($id);
         } else {
-            $post = null;
+            $post = null; $id = 0;
         }
         $ads = Ads::latest('created_at')->get();
-        return view('Backend/post',compact('post','ads'));
+        $select = [
+            'TopOneAd'=> Bit::where('post_id',$id)->where('edition','TopOneAd')->first(),
+            'ArticleOne'=> Bit::where('post_id',$id)->where('edition','ArticleOne')->first(),
+            'ArticleTwo'=> Bit::where('post_id',$id)->where('edition','ArticleTwo')->first(),
+            'ArticleThree'=> Bit::where('post_id',$id)->where('edition','ArticleThree')->first(),
+            'ArticleFour'=> Bit::where('post_id',$id)->where('edition','ArticleFour')->first(),
+            'ArticleFive'=> Bit::where('post_id',$id)->where('edition','ArticleFive')->first(),
+            'RightOne'=> Bit::where('post_id',$id)->where('edition','RightOne')->first(),
+            'RightTwo'=> Bit::where('post_id',$id)->where('edition','RightTwo')->first(),
+            'RightThree'=> Bit::where('post_id',$id)->where('edition','RightThree')->first(),
+            'MobileFooterAd'=> Bit::where('post_id',$id)->where('edition','MobileFooterAd')->first(),
+        ];
+        return view('Backend/post',compact('post','ads','select'));
     }
     public function poststore(Request $request){
         $input = $request->all();
@@ -61,7 +73,37 @@ class HomeController extends Controller
         $post->content = $input['content'];
         $post->youtube = $input['youtube'];
         $post->save();
+
+        if(is_numeric($input['id']) && $input['id']>0){
+            $post_id = $input['id'];
+        } else {
+            $post_id = $post->id;
+        }
+
+        if($input['TopOneAd']!='') $this->savebit($post_id,$input['TopOneAd'],'TopOneAd');
+        
+        if($input['ArticleOne']!='') $this->savebit($post_id,$input['ArticleOne'],'ArticleOne');
+        if($input['ArticleTwo']!='') $this->savebit($post_id,$input['ArticleTwo'],'ArticleTwo');
+        if($input['ArticleThree']!='') $this->savebit($post_id,$input['ArticleThree'],'ArticleThree');
+        if($input['ArticleFour']!='') $this->savebit($post_id,$input['ArticleFour'],'ArticleFour');
+        if($input['ArticleFive']!='') $this->savebit($post_id,$input['ArticleFive'],'ArticleFive');
+
+        if($input['RightOne']!='') $this->savebit($post_id,$input['RightOne'],'RightOne');
+        if($input['RightTwo']!='') $this->savebit($post_id,$input['RightTwo'],'RightTwo');
+        if($input['RightThree']!='') $this->savebit($post_id,$input['RightThree'],'RightThree');
+
+        if($input['MobileFooterAd']!='') $this->savebit($post_id,$input['MobileFooterAd'],'MobileFooterAd');
+
+
+
         return Redirect::to('/master/posts')->with('message','文章更新');
+    }
+    private function savebit($post_id,$ad_id,$edition){
+        Bit::firstOrCreate([
+            'post_id' => $post_id,
+            'ad_id'   => $ad_id,
+            'edition' => $edition
+        ]);
     }
 
 
@@ -89,6 +131,14 @@ class HomeController extends Controller
         $ad->title   = $input['title'];
         $ad->content = $input['content'];
         $ad->url     = $input['url'];
+        if($request->hasFile('image')){
+            $filename = date('md_').uniqid().'.'.$request->file('image')->getClientOriginalExtension();
+            $floder = 'uploads/'.date('Ym');
+            if (!file_exists($floder)) mkdir($floder);
+            $request->file('image')->move($floder, $filename);
+            $ad->image = '/' . $floder . '/' . $filename;
+        }
+
         $ad->save();
         return Redirect::to('/master/ads')->with('message','廣告更新');
     }

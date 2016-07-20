@@ -16,7 +16,7 @@ class CreateBiteditionTable extends Migration
             $table->increments('id');
             $table->integer('post_id');
             $table->integer('ad_id');
-            $table->integer('edition');
+            $table->string('edition',20);
             $table->timestamps();
         });
     }
