@@ -10,6 +10,7 @@ use App\Model\Posts;
 use App\Model\Ads;
 use App\Model\Bit;
 use Redirect;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -22,7 +23,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->UID = auth()->user()->id;
+        if (Auth::check()) $this->UID = auth()->user()->id;
     }
 
     /**
