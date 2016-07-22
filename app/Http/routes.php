@@ -48,3 +48,5 @@ Route::get('/master/posts', 'HomeController@posts');
 Route::get('/master/post', 'HomeController@post');
 Route::get('/master/{id}/post', 'HomeController@post');
 Route::post('/master/post', 'HomeController@poststore');
+
+Route::delete('/master/bit/{id}/delete','HomeController@deleteBit');

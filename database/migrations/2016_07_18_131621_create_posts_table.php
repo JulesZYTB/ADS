@@ -17,7 +17,7 @@ class CreatePostsTable extends Migration
             $table->integer('user_id');
             $table->integer('views');
             $table->string('title',200);
-            $table->string('content',200);
+            $table->text('content');
             $table->string('youtube',200);
             $table->string('image',200);
             $table->timestamps();

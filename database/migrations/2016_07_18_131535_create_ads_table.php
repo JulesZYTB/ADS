@@ -17,6 +17,7 @@ class CreateAdsTable extends Migration
             $table->integer('user_id');
             $table->integer('views');
             $table->integer('hits');
+            $table->string('area',10);
             $table->string('title',200);
             $table->string('content',200);
             $table->string('url',200);
